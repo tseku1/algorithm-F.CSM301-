@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UB Routing</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map { height: 90vh; }
+  </style>
+</head>
+<body>
+
+  <h2>UB Routing System</h2>
+  
+  <div>
+    <select id="algo">
+      <option value="bfs">BFS</option>
+      <option value="dfs">DFS</option>
+      <option value="dijkstra">Dijkstra</option>
+    </select>
+    <button id="go">Draw route</button>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([47.918, 106.917], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    let start = null, goal = null, line = null;
+
+    map.on('click', e => {
+      if (!start) {
+        start = e.latlng;
+        L.marker(start).addTo(map).bindPopup('Start').openPopup();
+      } else if (!goal) {
+        goal = e.latlng;
+        L.marker(goal).addTo(map).bindPopup('Goal').openPopup();
+      }
+    });
+
+    document.getElementById('go').onclick = async () => {
+      if (!start || !goal) return alert('Please click on two points on the map');
+      if (start.lat === goal.lat && start.lng === goal.lng) return alert('Start and Goal cannot be the same point');
+
+      const algo = document.getElementById('algo').value;
+      const res = await fetch('http://127.0.0.1:8000/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          start: [start.lat, start.lng], 
+          goal: [goal.lat, goal.lng], 
+          algo: algo
+        })
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (data.path.length === 0) {
+        alert("No path found between the selected locations.");
+        return;
+      }
+
+      if (line) map.removeLayer(line);
+      line = L.polyline(data.path, { color: 'blue', weight: 5, opacity: 1 }).addTo(map);
+      map.fitBounds(line.getBounds());
+    };
+  </script>
+
+</body>
+</html>
