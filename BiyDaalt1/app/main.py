@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from .schemas import RouteRequest, RouteResponse
-from .graph import load_graph
-from .geo import to_latlon, nearest_node, path_length_m
-from .algorithms.bfs import bfs_path
-from .algorithms.dfs import dfs_path
-from .algorithms.dijkstra import dijkstra_path
+from app.schemas import RouteRequest, RouteResponse
+from app.graph import load_graph
+from app.geo import to_latlon, nearest_node, path_length_m
+from app.algorithms.bfs import bfs_path
+from app.algorithms.dfs import dfs_path
+from app.algorithms.dijkstra import dijkstra_path
 
 app = FastAPI(title="UB Routing API")
 

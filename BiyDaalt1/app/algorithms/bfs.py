@@ -18,7 +18,6 @@ def bfs_path(G: Graph, start: Node, goal: Node) -> List[Node]:
                 seen.add(v)
                 parent[v] = u
                 if v == goal:
-                    
                     path = [v]
                     while path[-1] is not None:
                         prev = parent[path[-1]]
