@@ -1,16 +1,19 @@
 import math
 from typing import Tuple, Dict, List
-
+# уртраг, өргөрөгийг тодорхойлно
 Node = Tuple[float, float]
 
 def haversine_m(a: Node, b: Node) -> float:
     lon1, lat1 = a
     lon2, lat2 = b
+    # Дэлхийн дундаж радиус
     R = 6371000.0
+    # бүх өнцгийг тодорхойлно
     phi1 = math.radians(lat1)
     phi2 = math.radians(lat2)
     dphi = math.radians(lat2 - lat1)
     dlbd = math.radians(lon2 - lon1)
+    # Бүх өнцгийг радиан руу хөрвүүлээд Haversine томьёо
     s = math.sin(dphi/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dlbd/2)**2
     return 2 * R * math.asin(math.sqrt(s))
 

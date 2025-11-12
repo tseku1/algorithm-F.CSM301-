@@ -14,7 +14,7 @@ def bfs_path(G: Graph, start: Node, goal: Node) -> List[Node]:
     while q:
         u = q.popleft()
         for v in G.get(u, {}):
-            if v not in seen:
+            if v not in seen:           
                 seen.add(v)
                 parent[v] = u
                 if v == goal:
